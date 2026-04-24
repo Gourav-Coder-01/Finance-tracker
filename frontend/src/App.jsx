@@ -8,8 +8,8 @@ import Expense from './pages/Expense'
 
 const App = () => {
   return (
-      <div className=' h-screen bg-green-200'>
-    <div className='w-[95%] mx-auto'>
+      <div className=' h-screen bg-green-200 overflow-y-scroll'>
+    <div>
       <Navbar/>
       <Routes>
             <Route path='/' element={<Dashboard/>}/>
