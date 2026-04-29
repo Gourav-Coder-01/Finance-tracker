@@ -4,66 +4,9 @@ import { FinanceContext } from "../context/FinanceContext";
 import DoughnutChart from "../components/DoughnutChart";
 
 const Dashboard = () => {
-  const { income, expense, transactions,typee,setType } = useContext(FinanceContext);
-  const [incAmountArr, setIncAmountArr] = useState([]);
-  const [incDateArr, setIncDateArr] = useState([]);
-  const [expAmountArr, setExpAmountArr] = useState([]);
-  const [expDateArr, setExpDateArr] = useState([]);
-  const [bal, setBal] = useState([]);
-  const [balDate, setBalDate] = useState([]);
-  
-  
-  typee.length>0 && console.log(typee)
-  useEffect(() => {
-    // income---------------------------------------------
-    income.map((data) => {
-      setIncAmountArr((dta) => [...dta, data.amount]);
-    });
-    
+  const { income, expense, transactions,typee,setType,basis,setBasis,chartLine,setChartLine} = useContext(FinanceContext);
 
-
-  
-
-    income.map((data) => {
-      setIncDateArr((dta) => [
-        ...dta,
-        data.date.split("-").reverse().join("-"),
-      ]);
-    });
-
-    // Expense---------------------------------------------
-    expense.map((data) => {
-      setExpAmountArr((dta) => [...dta, data.amount]);
-    });
-
-    income.map((data) => {
-      setExpDateArr((dta) => [
-        ...dta,
-        data.date.split("-").reverse().join("-"),
-      ]);
-    });
-
-    // for balance identify---------------------------------------
-    const merged = income
-      .filter((obj1) => expense.some((obj2) => obj1.date === obj2.date))
-      .map((obj1) => {
-        const match = expense.find((obj2) => obj1.date === obj2.date);
-        return {
-          date: obj1.date,
-          income: obj1.amount,
-          expense: match.amount,
-          balance: String(
-            obj1.amount - match.amount < 0
-              ? Math.abs(obj1.amount - match.amount)
-              : obj1.amount - match.amount,
-          ),
-        };
-      });
-    setBal(merged.map((bal) => bal.balance));
-    setBalDate(merged.map((bal) => bal.date.split("-").reverse().join("-")));
-  }, [income, expense]);
-
-  const [basis, setBasis] = useState("Today");
+//  chartLine&&console.log(chartLine)
   return (
     <div className="w-[95%] mx-auto">
       {/* selection section------------------------------------------------- */}
@@ -90,9 +33,11 @@ const Dashboard = () => {
             clr="rgba(255,0,0,0.3)"
             ttl="Expense"
             bsis={basis}
-            typ={expAmountArr}
-            dte={expDateArr}
+            chartData = {chartLine.chartExp}
+            // typ={expAmountArr}
+            // dte={expDateArr}
           />
+          
         </span>
         {/* Chart------------------------------------------------- */}
         <span className="border w-full h-60">
@@ -100,8 +45,9 @@ const Dashboard = () => {
             clr="rgba(0,255,255,0.3)"
             ttl="Income"
             bsis={basis}
-            typ={incAmountArr}
-            dte={incDateArr}
+            chartData = {chartLine.chartInc}
+            // typ={incAmountArr}
+            // dte={incDateArr}
           />
         </span>
         {/* Chart------------------------------------------------- */}
@@ -111,18 +57,22 @@ const Dashboard = () => {
             clr="rgba(255,255,0,0.3)"
             ttl="Balance"
             bsis={basis}
-            typ={bal}
-            dte={balDate}
+            chartData = {chartLine.chartwithBal}
+            // typ={bal}
+            // dte={balDate}
           />
         </span>
         {/* Chart------------------------------------------------- */}
       </div>
 
       {/* pie chart and tabular format */}
+
       <div className="flex justify-between items-center mt-1 gap-1">
         <span className=" w-fit h-60 border">
           <DoughnutChart labels={typee} />
         </span>
+
+
         {/* table-------------------------------------------- */}
         <table className="w-[80%] mx-auto border text-center">
           <caption className="text-white text-2xl font-bold bg-black">Recent Transactions</caption>
@@ -139,7 +89,7 @@ const Dashboard = () => {
             {transactions.slice(0, 7).map((data,idx) => (
               <tr className="bg-white" key={idx}>
                 <td>{data.date.split('-').reverse().join('-')}</td>
-                <td>{data.type}</td>
+                <td>{typeof(data.type) === "object" ? data.type.label : data.type}</td>
                 <td>{data.amount}</td>
                 <td className={`${data.balance<0?'text-red-500':'text-green-600'} font-bold`}>{data.balance}</td>
               </tr>

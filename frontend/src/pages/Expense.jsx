@@ -6,11 +6,14 @@ const Expense = () => {
   const { setExpense, expense } = useContext(FinanceContext);
 
   const today = new Date().toISOString().split("T")[0];
+  const todayTime = new Date().toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'})
+
   const [formData, setFormData] = useState({
     date: "",
     description: "",
     type: "",
     amount: "",
+    // time:"",
   });
 
   const deleteExp = (idx)=>{
@@ -22,9 +25,19 @@ const Expense = () => {
 
   const changeHandler = (e) => {
     const name = e.target.name;
-    const value = e.target.value;
-    setFormData((data) => ({ ...data, [name]:value }));
+    let value = e.target.value;
+
+    if(name === 'type' && value){
+      try {
+        value = JSON.parse(value)
+      } catch (error) {
+        console.error('invalid json',error)
+      }
+    }
+
+    setFormData((data) => ({ ...data, [name]:value,time:todayTime}));
   };
+
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -32,7 +45,7 @@ const Expense = () => {
       
      const updated =  [ ...data, formData ];
 
-     updated.sort((a,b)=> new Date(a.date) - new Date(b.date));
+     updated.sort((a,b)=> new Date(b.date) - new Date(a.date));
      return updated
     }
     );
@@ -57,21 +70,28 @@ const Expense = () => {
         <input
           onChange={changeHandler}
           type="text"
-          placeholder="Expense details"
+          placeholder="Description(exp. details)"
           required
           className="outline-gray-300"
           name="description"
           value={formData.description}
         />
-        <input
-          onChange={changeHandler}
-          type="text"
-          placeholder="Food,Grocery etc."
-          required
-          className="outline-gray-300"
-          name="type"
-          value={formData.type}
-        />
+       <select
+  name="type"
+  onChange={changeHandler}
+  required
+  className="outline-gray-400"
+>
+  <option value="">--Select Category--</option>
+  <option value='{"label":"Food","color":"rgba(255,255,0,0.1)"}'>Food</option>
+  <option value='{"label":"Grocery","color":"rgba(0,128,0,0.5)"}'>Grocery</option>
+  <option value='{"label":"Travel","color":"rgba(0,0,255,0.5)"}'>Travel</option>
+  <option value='{"label":"Rent","color":"rgba(255,0,0,0.5)"}'>Rent</option>
+  <option value='{"label":"Loan","color":"rgba(128,0,128,0.5)"}'>Loan</option>
+  <option value='{"label":"Emergency","color":"rgba(255,165,0,0.5)"}'>Emergency</option>
+  <option value='{"label":"Others","color":"rgba(100,100,100,0.5)"}'>Others</option>
+</select>
+
         <input
           onChange={changeHandler}
           type="number"
@@ -106,7 +126,7 @@ const Expense = () => {
           <tr key={idx} className="bg-blue-200">
                 <td>{data.date.split("-").reverse().join("-")}</td>
                 <td>{data.description}</td>
-                <td>{data.type}</td>
+                <td>{data.type.label}</td>
                 <td>{data.amount}</td>
                <td className="flex justify-center mt-1 text-red-500">
                                 <MdDeleteForever className="cursor-pointer" onClick={()=>deleteExp(idx)}/>

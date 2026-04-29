@@ -5,11 +5,6 @@ import { MdDeleteForever } from "react-icons/md";
 const Transactions = () => {
   const { income, expense,transactions,setTransactions } = useContext(FinanceContext);  
 
-
-
-  
-
-
   return (
     <div>
       <h1 className="text-center font-bold text-2xl text-blue-700">Transactions</h1>
@@ -30,7 +25,7 @@ const Transactions = () => {
           <tr key={idx} className="bg-blue-200">
                 <td>{data.date.split("-").reverse().join("-")}</td>
                 <td>{data.description}</td>
-                <td>{data.type}</td>
+                <td>{typeof(data.type) === "object" ? data.type.label : data.type}</td>
                 <td className={`${data.amount<0?"text-red-500":"text-green-700"}`}>{data.amount}</td>
                <td className={`text-blue-600 ${data.balance<0 ?'font-bold text-red-800' : ''}`}>
                                {data.balance}

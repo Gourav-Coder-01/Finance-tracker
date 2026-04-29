@@ -4,7 +4,7 @@ import { MdDeleteForever } from "react-icons/md";
 
 const Income = () => {
   const { setIncome, income } = useContext(FinanceContext);
-
+    const todayTime = new Date().toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'})
  
 
   const today = new Date().toISOString().split("T")[0];
@@ -22,7 +22,8 @@ const Income = () => {
   const changeHandler = (e) => {
     const name = e.target.name;
     const value = e.target.value;
-    setFormData((data) => ({ ...data, [name]: value }));
+
+    setFormData((data) => ({ ...data, [name]: value, time:todayTime }));
   };
 
   const submitHandler = (e) => {
@@ -31,7 +32,7 @@ const Income = () => {
       (data) => {
           const updated = [ ...data, formData ];
 
-          updated.sort((a,b)=> new Date(a.date) - new Date(b.date));
+          updated.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
           return updated
       }
@@ -62,15 +63,15 @@ const Income = () => {
           name="description"
           value={formData.description}
         />
-        <input
-          onChange={changeHandler}
-          type="text"
-          placeholder="Received from"
-          required
-          className="outline-gray-300"
-          name="type"
-          value={formData.type}
-        />
+         <select name="type" onChange={changeHandler} required  className="outline-gray-400" value={formData.type}>
+          <option value="">--Select Category--</option>
+          <option value="Salary">Salary</option>
+          <option value="Business">Business</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Investment">Investment</option>
+          <option value="Gift">Gift</option>
+          <option value="Others">Others</option>
+        </select>
         <input
           onChange={changeHandler}
           type="number"

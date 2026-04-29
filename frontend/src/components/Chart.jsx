@@ -29,15 +29,15 @@ const whiteBackgroundPlugin = {
   },
 };
 
-const Chart = ({clr,ttl,bsis, typ, dte}) => {
-  
+const Chart = ({clr,ttl,bsis,chartData}) => {
+  console.log(chartData)
   const data = {
-    labels: dte,
+    labels: chartData && chartData.map(item=>(item.date.split('-').reverse().join('-'))),
     datasets: [
       {
         id: 1,
         label: ttl,
-        data: typ,
+        data: chartData && chartData.map(item=>(item.balance)),
         borderColor: clr,
         backgroundColor: clr,
         fill:true,

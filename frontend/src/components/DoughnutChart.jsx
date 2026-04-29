@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -10,6 +10,7 @@ import {
 
 // Register modules
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
+
 
 
 
@@ -26,14 +27,16 @@ const whiteBackgroundPlugin = {
 };
 
 
+
 const DoughnutChart = ({ clrArr, ttl, labels, values }) => {
+ 
   const data = {
-    labels: labels, // e.g. ['Income', 'Expense', 'Balance']
+    labels: labels.map(dta=>dta.type), // e.g. ['Income', 'Expense', 'Balance']
     datasets: [
       {
         label: 'Rs',
-        data: [500,1000,1500], // e.g. [5000, 2000, 3000]
-        backgroundColor: ['rgba(0,255,255,0.7)','rgba(255,0,0,0.8)','rgba(255,255,0,0.7)'],  // e.g. ['rgba(0,255,255,0.3)','rgba(255,0,0,0.3)','rgba(255,255,0,0.3)']
+        data: labels.map(item => item.amount), // e.g. [5000, 2000, 3000]
+        backgroundColor: labels.map(data=>data.color),  // e.g. ['rgba(0,255,255,0.3)','rgba(255,0,0,0.3)','rgba(255,255,0,0.3)']
         borderColor: 'white',
         borderWidth: 2,
       },
