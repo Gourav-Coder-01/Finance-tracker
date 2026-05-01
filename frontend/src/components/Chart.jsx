@@ -30,9 +30,9 @@ const whiteBackgroundPlugin = {
 };
 
 const Chart = ({clr,ttl,bsis,chartData}) => {
-  console.log(chartData)
+  // console.log(chartData)
   const data = {
-    labels: chartData && chartData.map(item=>(item.date.split('-').reverse().join('-'))),
+    labels: 'chartData && chartData.map(item=>(item.date.split('-').reverse().join('-')))',
     datasets: [
       {
         id: 1,
